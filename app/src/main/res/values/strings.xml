@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ElixirGame</string>
+    <string name="take_game">Quiero este juego!</string>
+    <string name="metacritic">Valoracion de la Critica</string>
+    <string name="last_price">Precio Anterior $</string>
+    <string name="actual_price">Precio Actual $</string>
+</resources>
