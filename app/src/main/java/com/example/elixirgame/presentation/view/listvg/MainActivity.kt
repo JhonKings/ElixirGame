@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.elixirgame.data.local.database.AppDataBase
 import com.example.elixirgame.data.network.api.VideoGameService
 import com.example.elixirgame.data.network.retrofit.RetrofitHelper
 import com.example.elixirgame.data.repository.VideoGameImpl
@@ -22,19 +23,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_main)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //binding.button.setOnClickListener {
-
         //Capas de la aplicación
         val apiService = RetrofitHelper.getRetrofit().create(VideoGameService::class.java)
-        val repository = VideoGameImpl(apiService)
+       // Log.i("API", "Antes de Database")
+        val dataBase = AppDataBase.getDataBase(application)
+        //Log.i("API", "Despues de Database")
+
+        val repository = VideoGameImpl(apiService, dataBase.videoGameDAO())
         val useCase = VideoGameUseCase(repository)
         val viewModelFactory = ViewModelFactory(useCase)
         val viewModel = ViewModelProvider(this,viewModelFactory)[VideoGameViewModel::class.java]
+
+
+        viewModel.getAllVideoGamesFromServer()
+
 
         val adapterVideoGame = VideoGameAdapter()
         binding.vgRecycler.adapter = adapterVideoGame
@@ -53,6 +59,8 @@ class MainActivity : AppCompatActivity() {
             gotToVideoGameDetailsPage(idVideoGame)
 
         }
+
+
 
     }
 
